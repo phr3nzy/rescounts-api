@@ -1,5 +1,7 @@
 # Rescounts API
 
+[![ci](https://github.com/phr3nzy/rescounts-api/actions/workflows/ci.yml/badge.svg)](https://github.com/phr3nzy/rescounts-api/actions/workflows/ci.yml)
+
 ## Requirements
 
 - Go v1.17
