@@ -1,5 +1,4 @@
-// package middleware houses all logic that enables HTTP middlewares like loggers, auth,
-// caching, tracing etc.
+// package cache houses an in-memory, thread-safe caching solution.
 package cache
 
 import (
