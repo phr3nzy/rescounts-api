@@ -20,7 +20,7 @@ func removeDuplicates(posts []Post) []Post {
 }
 
 // sortPosts accepts an array of `Post` and sorts it based on a field
-// and direction (asc | desc).
+// and direction (asc | desc). Defaults are `id` and `asc`.
 func sortPosts(posts []Post, field, direction string) []Post {
 	var postsToSort []Post = posts
 
@@ -44,6 +44,11 @@ func sortPosts(posts []Post, field, direction string) []Post {
 			})
 		}
 	case "id":
+		{
+			sort.SliceStable(postsToSort, func(i, j int) bool {
+				return postsToSort[i].ID < postsToSort[j].ID
+			})
+		}
 	default:
 		{
 			sort.SliceStable(postsToSort, func(i, j int) bool {

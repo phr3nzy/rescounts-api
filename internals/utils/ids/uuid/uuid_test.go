@@ -6,9 +6,6 @@ import (
 	"github.com/phr3nzy/rescounts-api/internals/utils/ids/uuid"
 )
 
-func TestGenerateUUID(t *testing.T) {
-}
-
 func BenchmarkGenerateUUID(b *testing.B) {
 	var l int64
 	for i := 0; i < b.N; i++ {
