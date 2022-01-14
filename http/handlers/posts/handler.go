@@ -151,7 +151,8 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 		Posts = append(Posts, posts...)
 	}
 
-	sortPosts(Posts, sortBy, direction)
+	postsWithoutDuplicates := removeDuplicates(Posts)
+	sortedPosts := sortPosts(postsWithoutDuplicates, sortBy, direction)
 
-	return ctx.Status(200).JSON(fiber.Map{"posts": Posts})
+	return ctx.Status(200).JSON(fiber.Map{"posts": sortedPosts})
 }
