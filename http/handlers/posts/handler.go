@@ -42,7 +42,7 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 	direction := ctx.Query("direction")
 	sortBy := ctx.Query("sortBy")
 
-	if len(tags) <= 0 {
+	if len(tags) <= 0 || len(ctx.Query("tags")) <= 0 {
 		return ctx.Status(400).JSON(fiber.Map{"error": "tags parameter is required"})
 	}
 
