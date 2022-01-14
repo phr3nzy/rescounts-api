@@ -33,7 +33,8 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	var Posts []Post
-	PostsChan := make(chan []Post)
+	RequestErrorsChan := make(chan []error, 1)
+	PostsChan := make(chan []Post, 1)
 	var querystring string
 
 	// Fetch query params
@@ -86,12 +87,11 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 	}
 
 	agent := fiber.AcquireAgent()
+	defer fiber.ReleaseAgent(agent)
 
 	for _, tag := range tags {
 		wg.Add(1)
 		go func() {
-			defer wg.Done()
-
 			var body []byte
 			var errors []error
 			var apiJsonResponse ApiJsonResponse
@@ -114,11 +114,8 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 
 				// Handle request errors
 				if len(errors) > 0 {
-					var e string
-					for _, err := range errors {
-						log.Error("Failed to fetch a response.", zap.Error(err))
-						e += err.Error()
-					}
+					RequestErrorsChan <- errors
+					wg.Done()
 				}
 			}
 
@@ -131,13 +128,24 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 			}
 
 			PostsChan <- apiJsonResponse.Posts
+			wg.Done()
 		}()
 	}
 
 	go func() {
 		wg.Wait()
 		close(PostsChan)
+		close(RequestErrorsChan)
 	}()
+
+	if len(RequestErrorsChan) > 0 {
+		for errs := range RequestErrorsChan {
+			for _, err := range errs {
+				log.Error("Failed to fetch a response.", zap.Error(err))
+			}
+		}
+		return ctx.Status(500).JSON(fiber.Map{"error": "Internal Server Error", "message": "Something went wrong. Please try again."})
+	}
 
 	for posts := range PostsChan {
 		Posts = append(Posts, posts...)
