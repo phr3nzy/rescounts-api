@@ -86,6 +86,7 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 	}
 
 	agent := fiber.AcquireAgent()
+	defer fiber.ReleaseAgent(agent)
 
 	for _, tag := range tags {
 		wg.Add(1)
