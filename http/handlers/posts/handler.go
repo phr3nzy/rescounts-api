@@ -33,7 +33,7 @@ func FetchMultiplePostsWithCaching(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	var Posts []Post
-	PostsChan := make(chan []Post)
+	PostsChan := make(chan []Post, 1)
 	var querystring string
 
 	// Fetch query params
