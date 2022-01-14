@@ -5,6 +5,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/phr3nzy/rescounts-api/http/handlers/healthcheck"
+	"github.com/phr3nzy/rescounts-api/http/handlers/posts"
 )
 
 // SetupRoutes registers the routes for the server with their respective handlers
@@ -15,5 +16,6 @@ func SetupRoutes(app *fiber.App) {
 	v1 := api.Group("/v1")
 
 	// Register routes
-	v1.Get("/ping", healthcheck.Ping) // Maps to /api/v1/ping
+	v1.Get("/ping", healthcheck.Ping)                     // Maps to /api/v1/ping
+	v1.Get("/posts", posts.FetchMultiplePostsWithCaching) // Maps to /api/v1/posts
 }
