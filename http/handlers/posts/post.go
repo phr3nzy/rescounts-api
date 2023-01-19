@@ -1,5 +1,6 @@
 package posts
 
+// Post is the model for a single post.
 type Post struct {
 	ID         int64    `json:"id"`
 	Author     string   `json:"author"`
@@ -10,6 +11,7 @@ type Post struct {
 	Tags       []string `json:"tags"`
 }
 
+// ApiJsonResponse is the model for the JSON response from the API.
 type ApiJsonResponse struct {
 	Posts []Post `json:"posts"`
 }
