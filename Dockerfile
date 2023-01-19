@@ -1,4 +1,4 @@
-FROM golang:1.17.0-alpine3.14 AS builder
+FROM golang:1.19-alpine AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN go mod verify
 
 RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o rescounts-api
 
-FROM alpine:3.14
+FROM alpine
 
 WORKDIR /app
 
